@@ -568,26 +568,6 @@ my_target_global_cflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_$(my_prefix)GLOBA
 my_target_global_conlyflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_$(my_prefix)GLOBAL_CONLYFLAGS) $(my_c_std_conlyflags)
 my_target_global_cppflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_$(my_prefix)GLOBAL_CPPFLAGS) $(my_cpp_std_cppflags)
 my_target_global_ldflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_$(my_prefix)GLOBAL_LDFLAGS)
-ifeq ($(my_sdclang),true) 
-        SDCLANG_PRECONFIGURED_FLAGS := -O3 -g0 -mcpu=cortex-a57 \
--fno-align-functions -fno-align-labels -fno-align-loops -fno-align-os \
--mllvm -polly -mllvm -polly-process-unprofitable -mllvm -favor-r0-7 \
--mllvm -enable-print-fp-zero-alias -mllvm -polly-optimized-scops \
--mllvm -polly-tiling=false 
- 
-        ifeq ($(LOCAL_SDCLANG_LTO), true) 
-            ifneq ($(LOCAL_MODULE_CLASS), STATIC_LIBRARIES) 
-                SDCLANG_PRECONFIGURED_FLAGS += -fuse-ld=qcld -flto 
-            endif 
-        endif 
-
-        # Bundle our setup and add it to cflags 
-        my_target_global_cflags += $(SDCLANG_COMMON_FLAGS) $(SDCLANG_PRECONFIGURED_FLAGS) 
- 
-        # Pass all cflags and module specific LTO flags to linker 
-        my_target_global_ldflags += $(my_target_global_cflags) $(LOCAL_SDCLANG_LTO_LDFLAGS) 
-
-endif
 
 ifeq ($(my_sdclang),true)
     ifeq ($(strip $(my_cc)),)
